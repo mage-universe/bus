@@ -24,7 +24,7 @@ final class QueryBusTest extends TestCase
     public function test2(): void
     {
         $message = 'Method argument in Tests\InvalidTypeCase\Context\Application\InvalidQueryHandler::__invoke()
-         implementing Mage\Bus\Query\Contracts\Query not detected';
+        implementing Mage\Bus\Query not detected';
 
         $this->expectException(ReflectionException::class);
         $this->expectExceptionMessage(preg_replace('/\s+/', ' ', $message));
