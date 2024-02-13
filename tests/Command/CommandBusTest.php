@@ -3,15 +3,12 @@
 namespace Tests\Command;
 
 use Illuminate\Support\Facades\Queue;
-use Mage\Bus\Bridge\Dispatcher\CommandDispatcher;
-use Mage\Bus\Bridge\Dispatcher\EventDispatcher;
 use Mage\Bus\Bridge\Job\CommandAsync;
 use Mage\Bus\Bridge\Job\EventAsync;
 use Mage\Bus\Command\CommandBus;
 use Mage\Bus\Event\EventBus;
 use Mage\Bus\Event\EventPublisher;
-use Mage\Bus\Locator\CommandLocator;
-use Mage\Bus\Locator\EventLocator;
+use Orchestra\Testbench\Attributes\DefineEnvironment;
 use Tests\AnotherValidCase\Context\Application\AnotherDomainEventEventHandler;
 use Tests\AnotherValidCase\Context\Domain\AnotherDomainEvent;
 use Tests\TestCase;
@@ -25,26 +22,29 @@ use Tests\ValidCase\Context\Domain\SyncEvent;
 
 final class CommandBusTest extends TestCase
 {
-    public function test(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_handler_got_called_by_command(): void
     {
         $spy = $this->spy(ValidCommandHandler::class);
-        $bus = $this->getValidCommandBus();
+        $bus = $this->getCommandBus();
         $bus->handle(new ValidCommand());
         $spy->shouldHaveReceived('__invoke');
     }
 
-    public function test2(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_command_got_pushed_to_queue(): void
     {
         Queue::fake();
-        $bus = $this->getValidCommandBus();
+        $bus = $this->getCommandBus();
         $bus->asyncHandle(new ValidCommand());
         Queue::assertPushedOn('command', CommandAsync::class);
     }
 
-    public function test3(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_async_command_got_handled(): void
     {
         $spy = $this->spy(ValidCommandHandler::class);
-        $bus = $this->getValidCommandBus();
+        $bus = $this->getCommandBus();
         $commandAsync = new CommandAsync(new ValidCommand(), 'command');
         $commandAsync->handle($bus);
 
@@ -52,36 +52,39 @@ final class CommandBusTest extends TestCase
         $this->assertEquals(ValidCommand::class, $commandAsync->displayName());
     }
 
-    public function test4(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_called_command_dispatch_event_to_queue(): void
     {
-        $this->getValidEventBus();
         Queue::fake();
-        $bus = $this->getValidCommandBus();
+        $bus = $this->getCommandBus();
         $bus->handle(new ValidWithEventCommand());
         Queue::assertPushedOn('event', EventAsync::class);
     }
 
-    public function test6(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_dispatched_event_got_handled(): void
     {
         $spy = $this->spy(DomainEventEventHandler::class);
-        $bus = $this->getValidEventBus();
+        $bus = $this->getEventBus();
         $commandAsync = new EventAsync(new DomainEvent(), 'event');
         $commandAsync->handle($bus);
         $spy->shouldHaveReceived('__invoke');
     }
 
-    public function test7(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_event_got_queued_using_publisher(): void
     {
         Queue::fake();
-        $bus = $this->getValidEventBus();
+        $bus = $this->getEventBus();
         $eventPublisher = new EventPublisher($bus);
         $eventPublisher->publish(new DomainEvent());
         Queue::assertPushedOn('event', EventAsync::class);
     }
 
-    public function test5(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_multi_events_got_handled(): void
     {
-        $bus = $this->getValidEventBus();
+        $bus = $this->getEventBus();
 
         $spy = $this->spy(DomainEventEventHandler::class);
         $bus->dispatch(new DomainEvent());
@@ -92,63 +95,26 @@ final class CommandBusTest extends TestCase
         $spy->shouldHaveReceived('__invoke');
     }
 
-    public function test8(): void
+    #[DefineEnvironment('usesValidBus')]
+    public function test_event_got_dispatched_in_sync_way(): void
     {
-        $bus = $this->getValidEventBus();
+        $bus = $this->getEventBus();
         $spy = $this->spy(ValidWithSyncEventCommandHandler::class);
         $bus->dispatch(new SyncEvent());
         $spy->shouldHaveReceived('__invoke');
     }
 
-    private function getValidCommandBus(): CommandBus
+    private function getCommandBus(): CommandBus
     {
-        return new CommandBus($this->getCommandDispatcher(), []);
+        /** @psalm-var CommandBus $commandBus */
+        $commandBus = $this->app?->make(CommandBus::class);
+        return $commandBus;
     }
 
-    private function getCommandDispatcher(): CommandDispatcher
+    private function getEventBus(): EventBus
     {
-        /** @psalm-var \Illuminate\Bus\Dispatcher $busDispatcher */
-        $busDispatcher = $this->app->make(\Illuminate\Contracts\Bus\Dispatcher::class);
-
-        return new CommandDispatcher(
-            $busDispatcher,
-            new CommandLocator([[
-                'path' => dirname(__DIR__) . '/data/ValidCase',
-                'pattern' => '/.*\/Application\/.*/',
-            ]])
-        );
-    }
-
-    private function getValidEventBus(): EventBus
-    {
-        $this->app->bind(\Mage\Bus\EventPublisher::class, EventPublisher::class);
-
-        /** @psalm-var \Illuminate\Bus\Dispatcher $busDispatcher */
-        $busDispatcher = $this->app->make(\Illuminate\Contracts\Bus\Dispatcher::class);
-        /** @psalm-var \Illuminate\Events\Dispatcher $eventDispatcher */
-        $eventDispatcher = $this->app->make(\Illuminate\Contracts\Events\Dispatcher::class);
-
-        $dispatcher = new EventDispatcher(
-            $busDispatcher,
-            $eventDispatcher,
-            new EventLocator([[
-                'path' => dirname(__DIR__) . '/data/ValidCase',
-                'pattern' => '/.*\/Application\/.*/',
-            ], [
-                'path' => dirname(__DIR__) . '/data/AnotherValidCase',
-                'pattern' => '/.*\/Application\/.*/',
-            ]])
-        );
-
-        $this->app
-            ->when(EventBus::class)
-            ->needs(\Mage\Bus\Event\Dispatcher::class)
-            ->give(fn () => $dispatcher);
-        $this->app
-            ->when(EventBus::class)
-            ->needs('$middlewares')
-            ->give([]);
-
-        return new EventBus($dispatcher, []);
+        /** @psalm-var EventBus $eventBus */
+        $eventBus = $this->app?->make(EventBus::class);
+        return $eventBus;
     }
 }

@@ -3,7 +3,7 @@
 namespace Mage\Bus\Bridge\Dispatcher;
 
 use Mage\Bus\Bridge\Job\EventAsync;
-use Mage\Bus\Event;
+use Mage\Bus\Contracts\Event\Event;
 use Mage\Bus\Event\Dispatcher;
 use Mage\Bus\Locator\Locator;
 use function Lambdish\Phunctional\each;

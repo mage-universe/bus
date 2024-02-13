@@ -3,19 +3,19 @@
   "keywords": [
     "omatech",
     "mage",
-    "core"
+    "bus"
   ],
   "homepage": "https://github.com/mage-universe/bus",
   "license": "MIT",
   "type": "library",
   "authors": [
     {
-      "name": "Omatech",
-      "email": "devel@omatech.com"
+      "name": "Christian Bohollo",
+      "email": "cbohollo@omatech.com"
     }
   ],
   "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "lambdish/phunctional": "v2.1.0"
   },
   "require-dev": {
@@ -42,9 +42,9 @@
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests/",
-      "Tests\\ValidCase\\": "tests/data/ValidCase/src/",
-      "Tests\\AnotherValidCase\\": "tests/data/AnotherValidCase/src/",
-      "Tests\\InvalidTypeCase\\": "tests/data/InvalidTypeCase/src/"
+      "Tests\\ValidCase\\": "tests/Data/ValidCase/src/",
+      "Tests\\AnotherValidCase\\": "tests/Data/AnotherValidCase/src/",
+      "Tests\\InvalidTypeCase\\": "tests/Data/InvalidTypeCase/src/"
     }
   },
   "scripts": {
@@ -55,6 +55,13 @@
     "test:phpunit": "vendor/bin/paratest --processes=$(nproc) --display-warnings --display-deprecations --stop-on-warning ",
     "test:infection": "vendor/bin/infection --threads=$(nproc) --skip-initial-tests --coverage=build --show-mutations --logger-github",
     "test": ["@test:phpunit", "@test:infection"]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Mage\\Bus\\Bridge\\BusServiceProvider"
+      ]
+    }
   },
   "config": {
     "optimize-autoloader": true,

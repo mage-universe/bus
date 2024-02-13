@@ -3,9 +3,9 @@
 namespace Mage\Bus\Command\Middleware;
 
 use Closure;
-use Mage\Bus\Command;
 use Mage\Bus\Command\Dispatcher;
-use Mage\Bus\Query;
+use Mage\Bus\Contracts\Command\Command;
+use Mage\Bus\Contracts\Query\Query;
 
 readonly class DispatcherMiddleware implements Middleware
 {
