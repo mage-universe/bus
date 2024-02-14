@@ -2,8 +2,8 @@
 
 namespace Mage\Bus\Locator;
 
-use Mage\Bus\Command\QueryHandler;
-use Mage\Bus\Query;
+use Mage\Bus\Contracts\Query\Query;
+use Mage\Bus\Contracts\Query\QueryHandler;
 
 class QueryLocator extends Locator
 {

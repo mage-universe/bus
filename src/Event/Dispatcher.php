@@ -2,7 +2,7 @@
 
 namespace Mage\Bus\Event;
 
-use Mage\Bus\Event;
+use Mage\Bus\Contracts\Event\Event;
 
 interface Dispatcher
 {

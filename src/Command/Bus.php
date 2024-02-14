@@ -2,11 +2,12 @@
 
 namespace Mage\Bus\Command;
 
-use Mage\Bus\Command;
 use Mage\Bus\Command\Middleware\DispatcherMiddleware;
 use Mage\Bus\Command\Middleware\Middleware;
-use Mage\Bus\Query;
+use Mage\Bus\Contracts\Command\Command;
+use Mage\Bus\Contracts\Query\Query;
 
+/** @psalm-api */
 abstract class Bus
 {
     /** @psalm-param array<Middleware> $middlewares */

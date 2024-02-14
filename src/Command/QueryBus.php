@@ -2,7 +2,7 @@
 
 namespace Mage\Bus\Command;
 
-use Mage\Bus\Query;
+use Mage\Bus\Contracts\Query\Query;
 
 final class QueryBus extends Bus
 {

@@ -2,8 +2,8 @@
 
 namespace Mage\Bus\Locator;
 
-use Mage\Bus\Command;
-use Mage\Bus\Command\CommandHandler;
+use Mage\Bus\Contracts\Command\Command;
+use Mage\Bus\Contracts\Command\CommandHandler;
 
 class CommandLocator extends Locator
 {

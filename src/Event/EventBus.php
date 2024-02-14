@@ -2,11 +2,12 @@
 
 namespace Mage\Bus\Event;
 
-use Mage\Bus\AsyncEvent;
-use Mage\Bus\Event;
+use Mage\Bus\Contracts\Event\AsyncEvent;
+use Mage\Bus\Contracts\Event\Event;
 use Mage\Bus\Event\Middleware\DispatcherMiddleware;
 use Mage\Bus\Event\Middleware\Middleware;
 
+/** @psalm-api */
 final class EventBus
 {
     /** @psalm-param array<Middleware> $middlewares */

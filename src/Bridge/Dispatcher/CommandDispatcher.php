@@ -3,10 +3,10 @@
 namespace Mage\Bus\Bridge\Dispatcher;
 
 use Mage\Bus\Bridge\Job\CommandAsync;
-use Mage\Bus\Command;
 use Mage\Bus\Command\Dispatcher;
+use Mage\Bus\Contracts\Command\Command;
+use Mage\Bus\Contracts\Query\Query;
 use Mage\Bus\Locator\Locator;
-use Mage\Bus\Query;
 
 final readonly class CommandDispatcher implements Dispatcher
 {

@@ -2,10 +2,10 @@
 
 namespace Mage\Bus\Event;
 
-use Mage\Bus\Event;
+use Mage\Bus\Contracts\Event\Event;
 use function Lambdish\Phunctional\each;
 
-final readonly class EventPublisher implements \Mage\Bus\EventPublisher
+final readonly class EventPublisher implements \Mage\Bus\Contracts\Event\EventPublisher
 {
     public function __construct(private EventBus $eventBus) {}
 

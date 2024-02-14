@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Mage\Bus\Event;
+use Mage\Bus\Contracts\Event\Event;
 use Mage\Bus\Event\EventBus;
 
 final class EventAsync implements ShouldQueue

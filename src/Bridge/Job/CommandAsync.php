@@ -7,8 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Mage\Bus\Command;
 use Mage\Bus\Command\CommandBus;
+use Mage\Bus\Contracts\Command\Command;
 
 final class CommandAsync implements ShouldQueue
 {

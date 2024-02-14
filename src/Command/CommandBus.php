@@ -2,7 +2,7 @@
 
 namespace Mage\Bus\Command;
 
-use Mage\Bus\Command;
+use Mage\Bus\Contracts\Command\Command;
 
 final class CommandBus extends Bus
 {
