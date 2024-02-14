@@ -3,7 +3,7 @@
 namespace Mage\Bus\Locator;
 
 use Mage\Bus\Contracts\Event\Event;
-use Mage\Bus\Event\EventHandler;
+use Mage\Bus\Contracts\Event\EventHandler;
 use ReflectionClass;
 
 class EventLocator extends Locator
