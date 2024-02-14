@@ -2,7 +2,7 @@
 
 namespace Tests\AnotherValidCase\Context\Application;
 
-use Mage\Bus\Event\EventHandler;
+use Mage\Bus\Contracts\Event\EventHandler;
 use Tests\AnotherValidCase\Context\Domain\AnotherDomainEvent;
 
 class AnotherDomainEventEventHandler implements EventHandler
